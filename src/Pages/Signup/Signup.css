@@ -47,20 +47,21 @@
     width: 150px;
 }
 .signup-form{
-    flex: 8;
+    flex: 10;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
+    /* border: 1px solid red; */
 }
 
 .form-row-signup{
     display: flex;
     width: 100%;
-    flex: 1;
+    flex: 0.5;
 }
 
 .form-group-signup{
-    flex: 1;
+    flex: 0.5;
     margin-bottom: 10px;
 }
 
@@ -145,9 +146,6 @@
 }
 
 
-
-
-
 .footer-signup{
     flex: 3;
 }
@@ -155,10 +153,7 @@
 
 .term-policy-container{
     width: 100%;
-    height: 40px;
-    margin-bottom: 10px;
-    /* line-height: 1.2rem; */
-    /* border: 1px solid red; */
+    margin-bottom: 20px;
 }
 
 .term-policy-container label{ 
@@ -256,3 +251,4 @@
 .text-red-1000{ color: #F92B2B;}
 .text-red-100{ color: #E62B59;}
 
+.bg-red-100{ background-color: #f001; padding: 1%; border-radius:0px 0px 5px 5px; -webkit-border-radius:0px 0px 5px 5px; -moz-border-radius:0px 0px 5px 5px; -ms-border-radius:0px 0px 5px 5px; -o-border-radius:0px 0px 5px 5px; } 

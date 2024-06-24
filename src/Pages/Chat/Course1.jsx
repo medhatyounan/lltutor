@@ -199,7 +199,7 @@ const Course1 = () => {
 
                   <textarea id='textarea-input' placeholder='Enter Message'></textarea>
 
-                  <span id="hidden-text" class="hidden"></span>
+                  <span id="hidden-text" className="hidden"></span>
                   <button className='image-upload-btn upload'> <i class="bi bi-file-earmark-image"></i> </button>
                   <button className='file-upload-btn upload'> <i class="bi bi-file-earmark-text"></i> </button>
 

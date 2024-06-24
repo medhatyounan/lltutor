@@ -30,9 +30,8 @@ const Forget_Pass_PhoneNum = () => {
               <label htmlFor="phone-input" className='form-label'> Phone Number </label>
               <input type="tel" id='phone' className='form-control' placeholder='+201234567891'/>
 
-              <p className='text-grey-100 text-capitalize text-center mt-2'> Do you want to use Email ? <Link to='/forget-Password-With-Email' className='goLogin-forgetPass'> Click Here </Link> </p>
-              
-              <button className='send-code-forgetpass-btn' type='submit'> Send Code </button>
+            
+              <Link className='send-code-forgetpass-btn text-decoration-none text-center' to='/confirmphone' type='submit'> Send Code </Link>
 
             </form>
             

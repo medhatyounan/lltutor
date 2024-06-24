@@ -1,12 +1,39 @@
-import React from 'react'
+import React, { useState } from 'react'
+import axios from 'axios'
 import NavbarRegister from '../../Components/NavbarRegister/NavbarRegister'
 import './../../../node_modules/bootstrap/dist/css/bootstrap.css'
 import './../../../node_modules/bootstrap-icons/font/bootstrap-icons.css'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import './Forgetpass.css'
 
 
 const Forget_Pass_Email = () => {
+
+  const [email, setEmail] = useState('');
+  const navigate = useNavigate();
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('https://lltutor.runasp.net/accounts/SendOTPResetPassword', null, {
+        params: {
+          email: email,
+        },
+      });
+      console.log(response.data);
+      // Redirect to confirm OTP page
+      navigate('/confirmphone');
+    } catch (error) {
+      console.error('Error sending OTP', error);
+    }
+  };
+
+
+
   return (
     <>
       <div id='forgetpass-body'>
@@ -27,13 +54,18 @@ const Forget_Pass_Email = () => {
             <div className='emailContainer'>
 
               <label htmlFor="email-input" className='form-label'> Email </label>
-              <input type="email" id='email-input' className='form-control' placeholder='example@gmail.com'/>
+              <input 
+                type="email" 
+                id='email-input' 
+                className='form-control'
+                placeholder='example@gmail.com'
+                value={email}
+                onChange={handleEmailChange}
+              />
 
             </div>
 
-            <p className='text-grey-100 text-capitalize text-center mt-2'> Do you want to use Phone Number? <Link to='/forget-password-phone' className='goLogin-forgetPass'> Click Here </Link> </p>
-
-            <button className='send-code-forgetpass-btn' type='submit'> Send Code </button>
+            <button className='send-code-forgetpass-btn' onClick={handleSubmit}> Send Code </button>
 
             <p className='text-grey-100 text-capitalize text-center mt-3'> back to <Link to='/login' className='goLogin-forgetPass'> Login </Link> </p>
 

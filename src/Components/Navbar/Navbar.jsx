@@ -66,7 +66,7 @@ const Navbar = () => {
       
         <button variant='outlined' className="navbar-toggler nav-toggler" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample"> <span className='navbar-toggler-icon'></span> </button>
         
-        <div className='offcanvas offcanvas-start' tabindex="-1" id="offcanvasExample">
+        <div className='offcanvas offcanvas-start' tabIndex="-1" id="offcanvasExample">
           
           <div className='offcanvas-header'>
             

@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState } from 'react'
+import axios from 'axios'
 import '../../../node_modules/bootstrap/dist/css/bootstrap.css'
 import '../../../node_modules/bootstrap-icons/font/bootstrap-icons.css'
 import NavbarRegister from '../../Components/NavbarRegister/NavbarRegister'
@@ -7,9 +8,43 @@ import LLtutorLogo from '../../assets/lltutor-logo.svg'
 import Facebook from '../../assets/facebook.png'
 import Google from '../../assets/google.png'
 import Microsoft from '../../assets/microsoft.png'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate   } from 'react-router-dom'
 
 const Login = () => {
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
+  const navigate = useNavigate ()
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    const payload = {
+      EMAILORPHONE: email,
+      PASSWORD: password,
+      Rememberme: rememberMe ? 1 : 0
+    };
+
+    try {
+      const response = await axios.post('https://lltutor.runasp.net/accounts/login', payload);
+      console.log('Login successful:', response.data);
+
+      // Assuming a successful login returns a 200 status code
+      if (response.status === 200) {
+        navigate('/course2'); // Redirect to the intended route
+      } else {
+        alert('Login failed. Please check your credentials and try again.');
+      }
+    } catch (error) {
+      console.error('Error logging in:', error);
+      alert('Login failed. Please check your credentials and try again.');
+    }
+  
+  };
+
+
+
   return (
     <>
       <div id='login-main' className='container-fluid'>
@@ -38,29 +73,30 @@ const Login = () => {
             
             </div>
 
-            <form id='login-form'>
+            <form id='login-form' onSubmit={handleLogin}>
 
               <div className='form-group-login'>
                 <label htmlFor="email-login-input"> Email </label>
-                <input type="email" name='email_login' className='login-inputs form-control' placeholder='example@gmail.com'/>
+                <input type="email" value={email} name='email_login' className='login-inputs form-control' placeholder='example@gmail.com' onChange={(e) => setEmail(e.target.value)} required/>
               </div>
 
               <div className='form-group-login'>
                 <label htmlFor="pass-login-input"> Password <span className='text-important'> * </span> </label>
-                <input type="password" name='email_login' className='login-inputs form-control' placeholder='********'/>
+                <input type="password" value={password} name='email_login' className='login-inputs form-control' placeholder='********' onChange={(e) => setPassword(e.target.value)} required/>
               </div>
+
 
               {/* REMEMBER ME & FORGOT PASSWORD */}
               <div className='rem-for-container'>
                   
                 <div className='col remember-me'>
                   <label forhtml='remember'>
-                    <input type="checkbox" name='remember-me' className='input-checkbox' id='remember'/> Remember me
+                    <input type="checkbox" checked={rememberMe} name='remember-me' className='input-checkbox' id='remember' onChange={(e) => setRememberMe(e.target.checked)}/> Remember me
                   </label>
                 </div>
                   
                 <div className='col forget-password'>
-                  <Link to="/forget-Password-With-Email" className='link-forgetPass-login'>
+                  <Link to="/resetpassword" className='link-forgetPass-login'>
                     Forgot Password?
                   </Link>
                 </div>
@@ -68,22 +104,18 @@ const Login = () => {
               </div>
 
               <div className='login-btn-container'>
-                <button className='login-btn'> Login </button>
+                <button className='login-btn' type='submit'> Login </button>
               </div>
 
             </form>
-
             <div className='log-with-parent'>
-
               <div className='login-text'>
                 -- OR --
                 <br />
                 <span> Login With </span>
-
               </div>
 
               <div className='login-with-btns-container'>
-
                 <button className='login-with-btn col-3 text-facebook'>
                   <img src={Facebook} alt="facebook_icon" className='me-2' />
                   Facebook
@@ -96,7 +128,6 @@ const Login = () => {
                   <img src={Microsoft} alt="microsoft_icon" className='me-2' />
                   Microsoft
                 </button>
-
               </div>
 
             </div>

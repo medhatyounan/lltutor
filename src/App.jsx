@@ -19,6 +19,10 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 
 const App = () => {
+  
+  
+  const email = 'medhatyounan776@gmail.com'; // Replace with the actual email
+  
   return (
     <div>
 
@@ -36,7 +40,7 @@ const App = () => {
           <Route path = '/forget-Password-With-Email' element = { <Forget_Pass_Email/> } /> 
           <Route path = '/forget-password-phone' element = { <Forget_Pass_PhoneNum/> } /> 
           <Route path = '/resetpassword' element = { <Reset_Password/> } /> 
-          <Route path = '/confirmphone' element = { <Confirm_Phone/> } /> 
+          <Route path = '/confirmphone' element = { <Confirm_Phone email={email} /> } /> 
         </Routes>
       </Router>
 

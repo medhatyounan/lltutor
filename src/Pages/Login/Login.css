@@ -11,14 +11,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    /* border: 1px solid red; */
 }
 
 #login{
     height: 750px;
     background-color: #fff;
     padding: 3% 4.5%;
-    /* border: 1px solid red; */
     border-radius: 10px;
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
@@ -32,13 +30,11 @@
     display: flex;
     flex-direction: column;
     margin-bottom: 5px;
-    /* border: 1px solid blue; */
 }
 
 .welcome-msg{
     flex: 1;
     margin-bottom: 10px;
-    /* border: 1px solid salmon; */
 }
 
 .welcome-msg h5{
@@ -52,7 +48,6 @@
     margin-bottom: 10px;
     align-items: center;
     position: relative;
-    /* border: 1px solid salmon; */
 }
 
 .head-logo img{
@@ -73,7 +68,6 @@
     height: 320px;
     display: flex;
     flex-direction: column;
-    /* border: 1px solid green; */
 }
 
 .form-group-login{
@@ -86,7 +80,6 @@
     margin-bottom: 5px;
     color: #535353;
     letter-spacing: 0.5px;
-    /* font-weight: 600; */
 }
 
 .login-inputs{
@@ -129,7 +122,6 @@
     color: #121212;
     font-weight: 600;
     letter-spacing: 0.5px;
-    /* border: 1px solid red; */
 }
 
 
@@ -157,7 +149,6 @@
     height: 130px;
     display: flex;
     flex-direction: column;
-    /* border: 1px solid salmon; */
 }
 
 .login-text{
@@ -167,7 +158,6 @@
     margin-bottom: 10px;
     text-align: center;
     color: #535353;
-    /* border: 1px solid red; */
 }
 
 .log-with-parent .login-text span{
@@ -181,7 +171,6 @@
     display: flex;
     justify-content: space-evenly;
     height: 60px;
-    /* border: 1px solid green; */
 }
 
 .login-with-btn{

@@ -1,12 +1,61 @@
-import React from 'react'
+import React,{ useState } from 'react'
+import axios from 'axios';
+import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import Navbar from '../../Components/Navbar/Navbar'
 import '../../../node_modules/bootstrap/dist//css/bootstrap.css'
 import '../../../node_modules/bootstrap-icons/font/bootstrap-icons.css'
-import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
-import Navbar from '../../Components/Navbar/Navbar'
 import './Settings.css'
-import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 
 const Settings = () => {
+
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  const handleSaveChanges = async (event) => {
+    event.preventDefault();
+    setError('');
+    setSuccess('');
+
+    if (newPassword !== confirmPassword) {
+      setError('New password and confirm password do not match');
+      return;
+    }
+
+    let data = JSON.stringify({
+      "current_password": currentPassword,
+      "new_password": newPassword
+    });
+
+    let config = {
+      method: 'put',
+      maxBodyLength: Infinity,
+      url: 'https://lltutor.runasp.net/accounts/changepassword',
+      headers: { 
+        'Content-Type': 'application/json', 
+        'Authorization': 'Bearer your-token-here' // Replace with actual token
+      },
+      data: data
+    };
+
+    try {
+      const response = await axios.request(config);
+      if (response.status === 200) {
+        setSuccess('Password changed successfully');
+      }
+    } catch (error) {
+      console.error('Error changing password:', error.response ? error.response.data : error);
+      setError(error.response?.data?.message || 'Error changing password');
+    }
+  };
+
   return (
     <>
       <div id='settings-main' className='container-fluid'>
@@ -51,8 +100,17 @@ const Settings = () => {
 
                   <label htmlFor="currentPass">Current Password</label>
                   <div className='input-group-change-pass'>
-                    <input type="password" name='password' id='currentPass' placeholder='********'/>
-                    <button><VisibilityOffOutlinedIcon style={{fontSize:28}}/></button>
+                    <input 
+                      type={showCurrentPassword ? 'text' : 'password'} 
+                      id='currentPass' 
+                      placeholder='********'
+                      value={currentPassword}
+                      onChange={(e) => setCurrentPassword(e.target.value)}
+                      required
+                    />
+                    <button type="button" onClick={() => setShowCurrentPassword(!showCurrentPassword)}>
+                      {showCurrentPassword ? <VisibilityOutlinedIcon style={{fontSize:28}} /> : <VisibilityOffOutlinedIcon style={{fontSize:28}} />}
+                    </button>
                   </div>
 
                 </div>
@@ -61,8 +119,17 @@ const Settings = () => {
 
                   <label htmlFor="newPass">New Password</label>
                   <div className='input-group-change-pass'>
-                    <input type="password" name='password' id='newPass' placeholder='********'/>
-                    <button><VisibilityOffOutlinedIcon style={{fontSize:28}}/></button>
+                    <input 
+                      type={showNewPassword ? 'text' : 'password'}
+                      id='newPass' 
+                      placeholder='********'
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      required
+                    />
+                    <button type="button" onClick={() => setShowNewPassword(!showNewPassword)}>
+                      {showNewPassword ? <VisibilityOutlinedIcon style={{fontSize:28}} /> : <VisibilityOffOutlinedIcon style={{fontSize:28}} />}
+                    </button>
                   </div>
 
                 </div>
@@ -71,8 +138,17 @@ const Settings = () => {
 
                   <label htmlFor="confirmPass">Confirm New Password</label>
                   <div className='input-group-change-pass'>
-                    <input type="password" name='password' id='confirmPass' placeholder='********'/>
-                    <button><VisibilityOffOutlinedIcon style={{fontSize:28}}/></button>
+                    <input 
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      id='confirmPass' 
+                      placeholder='********'
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      required
+                    />
+                    <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                      {showConfirmPassword ? <VisibilityOutlinedIcon style={{fontSize:28}} /> : <VisibilityOffOutlinedIcon style={{fontSize:28}} />}
+                    </button>
                   </div>
 
                 </div>
@@ -82,10 +158,13 @@ const Settings = () => {
             </div>
 
             <div className='save-parent'>
-              <button id='save-changeBtn' className='col-5'>
+              <button id='save-changeBtn' className='col-5'  onClick={handleSaveChanges}>
                 Save Changes
               </button>
             </div>
+
+            {error && <div className='text-danger mt-2'>{error}</div>}
+            {success && <div className='text-success mt-2'>{success}</div>}
           </div>
 
         </div>
