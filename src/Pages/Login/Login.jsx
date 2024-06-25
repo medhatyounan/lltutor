@@ -55,13 +55,10 @@ const Login = () => {
         </div>
 
         {/* Body */}
-
         <div className='login-body container'>
-
           <div id='login' className='col-6'>
             
             {/* Logo & Welcome message */}
-            
             <div className='head-login'>
               <div className='welcome-msg'>
                 <h5><b>Welcome To</b></h5>
@@ -70,11 +67,9 @@ const Login = () => {
               <div className='head-logo'>
                 <img src={LLtutorLogo} alt="LLtutor_Logo" />
               </div>
-            
             </div>
 
             <form id='login-form' onSubmit={handleLogin}>
-
               <div className='form-group-login'>
                 <label htmlFor="email-login-input"> Email </label>
                 <input type="email" value={email} name='email_login' className='login-inputs form-control' placeholder='example@gmail.com' onChange={(e) => setEmail(e.target.value)} required/>
@@ -85,10 +80,8 @@ const Login = () => {
                 <input type="password" value={password} name='email_login' className='login-inputs form-control' placeholder='********' onChange={(e) => setPassword(e.target.value)} required/>
               </div>
 
-
               {/* REMEMBER ME & FORGOT PASSWORD */}
               <div className='rem-for-container'>
-                  
                 <div className='col remember-me'>
                   <label forhtml='remember'>
                     <input type="checkbox" checked={rememberMe} name='remember-me' className='input-checkbox' id='remember' onChange={(e) => setRememberMe(e.target.checked)}/> Remember me
@@ -100,7 +93,6 @@ const Login = () => {
                     Forgot Password?
                   </Link>
                 </div>
-
               </div>
 
               <div className='login-btn-container'>
@@ -129,16 +121,12 @@ const Login = () => {
                   Microsoft
                 </button>
               </div>
-
             </div>
 
             {/* Create account */}
             <div className='new-account'>
               Don't have an account? <Link to='/signup' className='link-goSignup'> Create an account </Link>
             </div>
-
-
-
 
           </div>
         </div>

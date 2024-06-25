@@ -1,9 +1,9 @@
 import React,{ useState } from 'react'
+import { Link } from 'react-router-dom'
 import axios from 'axios';
 import NavbarRegister from '../../Components/NavbarRegister/NavbarRegister'
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import { Link } from 'react-router-dom'
 import './../../../node_modules/bootstrap/dist/css/bootstrap.css'
 import './../../../node_modules/bootstrap-icons/font/bootstrap-icons.css'
 import './Forgetpass.css'
@@ -66,8 +66,6 @@ const Reset_Password = () => {
     }
   };
 
-
-
   return (
     <>
       <div id='reset-main' className='container-fluid'>
@@ -78,28 +76,19 @@ const Reset_Password = () => {
         </div>
 
         {/* body */}
-
         <div id="reset-body" className="container">
-
           <div className="reset-container col-6">
 
             {/* header for the container */}
             <div className='head-resetPass'>
-
               <h3 className='fw-bolder letter-space-1 mb-3'> Reset Password </h3>
-
               <p className='text-grey-100 letter-space-2'>Please enter the new password </p>
-
             </div>
 
             {/* form of reset password */}
-            
             <form className='form-reset' onSubmit={handleSubmit}>
-
               <div className="form-group-reset">
-              
                 <label htmlFor="newPass"> New Password <span className='text-important mx-2'> * </span> </label>
-
                 <div className='input-group-reset'>
                   <input 
                     type={showNewPassword ? 'text' : 'password'}
@@ -113,7 +102,6 @@ const Reset_Password = () => {
                       {showNewPassword ? <VisibilityOutlinedIcon style={{fontSize:28}} /> : <VisibilityOffOutlinedIcon style={{fontSize:28}} />}
                     </button>
                 </div>
-              
               </div>
 
               <div className="form-group-reset">
@@ -137,19 +125,14 @@ const Reset_Password = () => {
               </div>
 
               <div className='footer-reset'>
-              <button> Confirm Password </button>
+                <button> Confirm Password </button>
               
-              <p className='text-grey-200 text-center fw-bolder'>Back To <Link to="/login" className='goLogin-forgetPass'> Login </Link> </p>
+                <p className='text-grey-200 text-center fw-bolder'>Back To <Link to="/login" className='goLogin-forgetPass'> Login </Link> </p>
               
-            </div>
-
+              </div>
             </form>
-            
-            
           </div>
-          
         </div>
-
       </div>
     </>
   )

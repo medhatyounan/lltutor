@@ -8,7 +8,7 @@ import './../../../node_modules/bootstrap-icons/font/bootstrap-icons.css'
 import './Password.css'
 
 
-const Confirm_Phone = ({ email }) => {
+const Confirm_Email = ({ email }) => {
   
   const [value0, setValue0] = useState('');
   const [value1, setValue1] = useState('');
@@ -126,8 +126,8 @@ const Confirm_Phone = ({ email }) => {
 
 }
 
-Confirm_Phone.propTypes = {
+Confirm_Email.propTypes = {
   email: PropTypes.string.isRequired,
 };
 
-export default Confirm_Phone
+export default Confirm_Email
