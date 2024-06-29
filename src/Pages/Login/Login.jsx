@@ -101,7 +101,7 @@ const Login = () => {
                 <button className='login-btn' type='submit'> Login </button>
               </div>
             </form>
-            <div className='log-with-parent'>
+            {/* <div className='log-with-parent'>
               <div className='login-text'>
                 -- OR --
                 <br />
@@ -122,7 +122,7 @@ const Login = () => {
                   Microsoft
                 </button>
               </div>
-            </div>
+            </div> */}
 
             {/* Create account */}
             <div className='new-account'>

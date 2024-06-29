@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import ReactMarkdown from 'react-markdown';
 import axios from 'axios';
 import Navbar from '../../Components/Navbar/Navbar';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -8,64 +9,180 @@ import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import { grey } from '@mui/material/colors';
 import SendIcon from '@mui/icons-material/Send';
+import { authContext } from '../../Components/Context/authContext'; // Import the authContext
 
 const Course1 = () => {
   const [chatHistory, setChatHistory] = useState([]);
   const [message, setMessage] = useState('');
   const [error, setError] = useState(null);
+  const [session_id, setSessionId] = useState(null);
+  const [historyList, setHistoryList] = useState([]);
+  const [pendingMessage, setPendingMessage] = useState(null); // Add state for pending message
 
-  useEffect(() => {
-    const fetchChatHistory = async () => {
-      const config = {
-        method: 'get',
-        url: 'https://2232-156-210-18-81.ngrok-free.app',
-        headers: {},
-      };
+  const { token } = useContext(authContext); // Use the authContext to get the token
 
-      try {
-        const response = await axios.request(config);
-        console.log("API Response:", response.data);
-        setChatHistory(response.data.history || []);
-      } catch (error) {
-        console.error("Error fetching chat history:", error);
-        setError("Failed to fetch chat history. Please try again later.");
-      }
-    };
+  // Function to fetch historyId and set session_id
+  const fetchHistoryId = async (firstMessage) => {
+    let data = JSON.stringify({
+      "courseId": 1,
+      "title": firstMessage // Use the first message as title
+    });
 
-    fetchChatHistory();
-  }, []);
-
-  const handleSendMessage = async () => {
-    if (message.trim() === '') return;
-
-    setChatHistory([...chatHistory, { type: 'human', content: message }]);
-    setMessage('');
-
-    // Implement API call to send the message
-    const config = {
+    let config = {
       method: 'post',
-      url: 'https://2232-156-210-18-81.ngrok-free.app',
-      data: { message }
+      maxBodyLength: Infinity,
+      url: 'https://lltutor.runasp.net/chats',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`, // Use the token from context
+      },
+      data: data
     };
 
     try {
       const response = await axios.request(config);
-      setChatHistory([...chatHistory, { type: 'ai', content: response.data.reply }]);
+      console.log("API Response:", response.data);
+      const { historyId } = response.data;
+      setSessionId(historyId); // Set session_id with historyId
+    } catch (error) {
+      console.error("Error fetching historyId:", error);
+      setError("Failed to fetch historyId. Please try again later.");
+    }
+  };
+
+  const fetchChatHistory = async () => {
+    if (!session_id) return;
+
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `http://127.0.0.1:8000/chat/network/?session_id=${session_id}`,
+      headers: {}
+    };
+
+    try {
+      const response = await axios.request(config);
+      console.log("API Response:", response.data);
+      const updatedHistory = response.data.history.map(chat => {
+        if (chat.type === 'ai') {
+          const contentMatch = chat.content.match(/AIMessage\(content=['"]([\s\S]*?)['"]\)/);
+          return { ...chat, content: contentMatch ? contentMatch[1] : chat.content };
+        }
+        return chat;
+      });
+      setChatHistory(updatedHistory);
+    } catch (error) {
+      console.error("Error fetching chat history:", error);
+      setError("Failed to fetch chat history. Please try again later.");
+    }
+  };
+
+  // Function to fetch history list
+  const fetchHistoryList = async () => {
+    try {
+      const response = await axios.get('https://lltutor.runasp.net/chats/1', {
+        headers: { 'Authorization': `Bearer ${token}` } // Use the token from context
+      });
+      console.log("API Response:", response.data);
+      setHistoryList(response.data);
+    } catch (error) {
+      console.error("Error fetching history list:", error);
+      setError("Failed to fetch history list. Please try again later.");
+    }
+  };
+
+  useEffect(() => {
+    fetchHistoryList();
+    const interval = setInterval(() => {
+      fetchHistoryList();
+    }, 5000); // Run fetchHistoryList every 5 seconds
+
+    return () => clearInterval(interval); // Cleanup interval on component unmount
+  }, []);
+
+  useEffect(() => {
+    if (session_id) {
+      fetchChatHistory();
+    }
+  }, [session_id]);
+
+  useEffect(() => {
+    if (session_id && pendingMessage) {
+      sendMessage(pendingMessage);
+      setPendingMessage(null);
+    }
+  }, [session_id, pendingMessage]);
+
+  useEffect(() => {
+    if (session_id) {
+      const interval = setInterval(() => {
+        fetchChatHistory();
+      }, 5000); // Run fetchChatHistory every 5 seconds
+
+      return () => clearInterval(interval); // Cleanup interval on component unmount or when session_id changes
+    }
+  }, [session_id]);
+
+  const handleBack = () => {
+    window.history.back();
+  };
+
+  const handleSendMessage = async () => {
+    if (message.trim() === '') return;
+
+    const newMessage = { type: 'human', content: message };
+    setChatHistory([...chatHistory, newMessage]);
+    setMessage('');
+
+    if (!session_id) {
+      setPendingMessage(message); // Set pending message
+      await fetchHistoryId(message); // Call fetchHistoryId with the first message as title
+      return;
+    } 
+
+    sendMessage(message);
+  };
+
+  const sendMessage = async (message) => {
+    const data = JSON.stringify({
+      session_id: session_id.toString(),
+      question: message
+    });
+
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'http://127.0.0.1:8000/chat/network/',
+      headers: { 
+        'Content-Type': 'application/json'
+      },
+      data: data
+    };
+
+    try {
+      const response = await axios.request(config);
+      console.log("API Response:", response.data);
+
+      const aiResponseContent = response.data.reply.match(/AIMessage\(content=['"]([\s\S]*?)['"]\)/)?.[1] || response.data.reply || "No response from AI";
+      const aiResponse = { type: 'ai', content: aiResponseContent };
+      setChatHistory((prevChatHistory) => [...prevChatHistory, aiResponse]);
     } catch (error) {
       console.error("Error sending message:", error);
+      setError("Failed to send message. Please try again later.");
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
     }
   };
 
   const handleNewChat = () => {
-    setChatHistory([]);
-    setMessage('');
-  };
-
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      handleSendMessage();
-    }
+    setSessionId(null); // Reset session_id
+    setChatHistory([]); // Clear chat history
+    setMessage(''); // Clear message input
   };
 
   return (
@@ -73,7 +190,8 @@ const Course1 = () => {
       <Navbar />
 
       <div id='chat-body'>
-        <div className='head-course-section container-fluid'>
+        {/* head */}
+        <div className='head-course-section container-fluid row'>
           <div className='col-1 goBack-chat-btn'>
             <a href="/login">
               <ArrowBackIosRoundedIcon sx={{ fontSize: 30 }} /> Chat
@@ -84,9 +202,11 @@ const Course1 = () => {
           </div>
         </div>
 
-        <div className='chat__history-container container-fluid'>
+        {/* Body */}
+        <div className='chat__history-container container-fluid row'>
           <div id='history-container' className='col-3'>
             <div className='history'>
+              {/* HEAD HISTORY -- search section */}
               <div className='d-flex align-items-center justify-content-center height-1'>
                 <div className='search-container'>
                   <SearchRoundedIcon sx={{ color: grey[500] }} />
@@ -96,19 +216,15 @@ const Course1 = () => {
 
               <hr id='h-line' />
 
+              {/* BODY HISTORY -- list section */}
               <div id='list'>
                 <ul className='ul-list'>
-                  {error ? (
-                    <li className='error-message'>{error}</li>
+                  {historyList.length === 0 ? (
+                    <li>No history available</li>
                   ) : (
-                    chatHistory.map((chat, index) => (
-                      <li key={index}>
-                        <div className='title-date'>
-                          <h6 className='fw-700'>Chat {index + 1}</h6>
-                          <span className='font-s-1 c-mine-1'>Time</span>
-                        </div>
-                        <div className='content c-mine-1 font-s-2'>{chat.content}</div>
-                        <hr id='hr-line-li' />
+                    historyList.map((item) => (
+                      <li key={item.historyId} onClick={() => setSessionId(item.historyId)}>
+                        {item.title}
                       </li>
                     ))
                   )}
@@ -117,27 +233,31 @@ const Course1 = () => {
             </div>
           </div>
 
+          {/* CHAT SECTION */}
           <div id='chatAiBody-container' className='col-9'>
             <div className='chatAiBody'>
-              <div className='chatTitle'>
-                <div className='col-2 fs-3 fw-bolder letter-space-1'>Subject</div>
+              {/* TITLE --> CHAT */}
+              <div className='chatTitle row'>
+                <div className='col-2 fs-3 fw-bolder letter-space-1'>Network</div>
                 <div className='time-date col-2'>
-                  <span>10 : 00 AM</span>
-                  <span>06 / 07 / 2024</span>
+                  {/* <span>10 : 00 AM</span>
+                  <span>06 / 07 / 2024</span> */}
                 </div>
               </div>
 
+              {/* Chat Body */}
               <div id='chat-container'>
                 <ul>
                   {chatHistory.map((chat, index) => (
-                    <li key={index} className={chat.type === 'human' ? 'user-msg col-9' : 'chat-msg col-9'}>
-                      {chat.type === 'ai' && <h5><b>Chat</b></h5>}
-                      <p>{chat.content}</p>
+                    <li key={index} className={chat.type === 'human' ? 'user-msg col-9 mt-3' : 'chat-msg col-9'}>
+                      {chat.type === 'ai' && <h5><b>AI Tutor</b></h5>}
+                      <ReactMarkdown>{chat.content.replace(/\\n/g, '\n')}</ReactMarkdown>
                     </li>
                   ))}
                 </ul>
               </div>
 
+              {/* Chat Input */}
               <div id='chat-input-container'>
                 <div className='input-chat col-10'>
                   <textarea
@@ -145,11 +265,9 @@ const Course1 = () => {
                     placeholder='Enter Message'
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    onKeyPress={handleKeyPress}
+                    onKeyDown={handleKeyDown}
                   ></textarea>
                   <span id="hidden-text" className="hidden"></span>
-                  <button className='image-upload-btn upload'><i className="bi bi-file-earmark-image"></i></button>
-                  <button className='file-upload-btn upload'><i className="bi bi-file-earmark-text"></i></button>
                 </div>
                 <div className='col-2 send-btn-chat-container'>
                   <button className='send-btn-chat' onClick={handleSendMessage}>
@@ -163,6 +281,6 @@ const Course1 = () => {
       </div>
     </>
   );
-};
+}
 
 export default Course1;

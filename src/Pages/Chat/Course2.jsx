@@ -11,20 +11,20 @@ import { grey } from '@mui/material/colors';
 import SendIcon from '@mui/icons-material/Send';
 import { authContext } from '../../Components/Context/authContext'; // Import the authContext
 
-
 const Course2 = () => {
   const [chatHistory, setChatHistory] = useState([]);
   const [message, setMessage] = useState('');
   const [error, setError] = useState(null);
   const [session_id, setSessionId] = useState(null);
   const [historyList, setHistoryList] = useState([]);
+  const [pendingMessage, setPendingMessage] = useState(null); // Add state for pending message
 
   const { token } = useContext(authContext); // Use the authContext to get the token
 
   // Function to fetch historyId and set session_id
   const fetchHistoryId = async (firstMessage) => {
     let data = JSON.stringify({
-      "courseId": 1,
+      "courseId": 2,
       "title": firstMessage // Use the first message as title
     });
 
@@ -80,7 +80,7 @@ const Course2 = () => {
   // Function to fetch history list
   const fetchHistoryList = async () => {
     try {
-      const response = await axios.get('https://lltutor.runasp.net/chats', {
+      const response = await axios.get('https://lltutor.runasp.net/chats/2', {
         headers: { 'Authorization': `Bearer ${token}` } // Use the token from context
       });
       console.log("API Response:", response.data);
@@ -93,11 +93,33 @@ const Course2 = () => {
 
   useEffect(() => {
     fetchHistoryList();
+    const interval = setInterval(() => {
+      fetchHistoryList();
+    }, 5000); // Run fetchHistoryList every 5 seconds
+
+    return () => clearInterval(interval); // Cleanup interval on component unmount
   }, []);
 
   useEffect(() => {
     if (session_id) {
       fetchChatHistory();
+    }
+  }, [session_id]);
+
+  useEffect(() => {
+    if (session_id && pendingMessage) {
+      sendMessage(pendingMessage);
+      setPendingMessage(null);
+    }
+  }, [session_id, pendingMessage]);
+
+  useEffect(() => {
+    if (session_id) {
+      const interval = setInterval(() => {
+        fetchChatHistory();
+      }, 5000); // Run fetchChatHistory every 5 seconds
+
+      return () => clearInterval(interval); // Cleanup interval on component unmount or when session_id changes
     }
   }, [session_id]);
 
@@ -108,17 +130,22 @@ const Course2 = () => {
   const handleSendMessage = async () => {
     if (message.trim() === '') return;
 
-    if (!session_id) {
-      // Call fetchHistoryId with the first message as title
-      await fetchHistoryId(message);
-    }
-
     const newMessage = { type: 'human', content: message };
     setChatHistory([...chatHistory, newMessage]);
     setMessage('');
 
+    if (!session_id) {
+      setPendingMessage(message); // Set pending message
+      await fetchHistoryId(message); // Call fetchHistoryId with the first message as title
+      return;
+    } 
+
+    sendMessage(message);
+  };
+
+  const sendMessage = async (message) => {
     const data = JSON.stringify({
-      session_id: session_id,
+      session_id: session_id.toString(),
       question: message
     });
 
@@ -192,11 +219,15 @@ const Course2 = () => {
               {/* BODY HISTORY -- list section */}
               <div id='list'>
                 <ul className='ul-list'>
-                  {historyList.map((item) => (
-                    <li key={item.historyId} onClick={() => setSessionId(item.historyId)}>
-                      {item.title}
-                    </li>
-                  ))}
+                  {historyList.length === 0 ? (
+                    <li>No history available</li>
+                  ) : (
+                    historyList.map((item) => (
+                      <li key={item.historyId} onClick={() => setSessionId(item.historyId)}>
+                        {item.title}
+                      </li>
+                    ))
+                  )}
                 </ul>
               </div>
             </div>
@@ -218,7 +249,7 @@ const Course2 = () => {
               <div id='chat-container'>
                 <ul>
                   {chatHistory.map((chat, index) => (
-                    <li key={index} className={chat.type === 'human' ? 'user-msg col-9' : 'chat-msg col-9'}>
+                    <li key={index} className={chat.type === 'human' ? 'user-msg col-9 mt-3' : 'chat-msg col-9'}>
                       {chat.type === 'ai' && <h5><b>AI Tutor</b></h5>}
                       <ReactMarkdown>{chat.content.replace(/\\n/g, '\n')}</ReactMarkdown>
                     </li>

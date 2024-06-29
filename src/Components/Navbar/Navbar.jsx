@@ -86,12 +86,12 @@ const Navbar = () => {
         {/* RIGHT SIDE */}
         <div className='right-nav-container row row-cols-4'>
           {/* language button */}
-          <div className='col changeLang-container '>
+          {/* <div className='col changeLang-container '>
               <select className='changeLang c-grey-mine'>
                 <option value="English">English</option>
                 <option value="العربية">العربية</option>
               </select>
-          </div>
+          </div> */}
 
           {/* notification */}
           <div className='col notificationBtn-container c-grey-mine'>
@@ -107,9 +107,9 @@ const Navbar = () => {
             <span className='fs-6 c-grey-mine'>Medhat</span>
           </div>
 
-          <div className='col login-btn-container-course'>
+          {/* <div className='col login-btn-container-course'>
               <Link to='/login' className='login-btn-nav-course '>Login</Link>
-          </div>
+          </div> */}
         </div>
       </nav>
     </>

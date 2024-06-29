@@ -240,7 +240,7 @@ const Signup = () => {
           </form>
 
           <div className='footer-signup'>
-            <div className='sign-with-parent'>
+            {/* <div className='sign-with-parent'>
               <div className='signup-text'>
                 -- OR --
                 <br />
@@ -263,7 +263,7 @@ const Signup = () => {
                 <img src={Microsoft} alt="microsoft_icon" className='me-2' />
                 Microsoft
               </button>
-            </div>
+            </div> */}
 
             <div className='old-account mt-4 col text-center fw-bolder'>
               You have an account? <Link to="/login" className='link-go-login-fromSignup'>Login</Link> 
