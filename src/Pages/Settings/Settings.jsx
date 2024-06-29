@@ -40,7 +40,7 @@ const Settings = () => {
       url: 'https://lltutor.runasp.net/accounts/changepassword',
       headers: { 
         'Content-Type': 'application/json', 
-        'Authorization': 'Bearer your-token-here' // Replace with actual token
+        'Authorization': 'Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiJtZWRoYXR5b3VuYW43NzYiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJtZWRoYXR5b3VuYW43NzZAZ21haWwuY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbW9iaWxlcGhvbmUiOiIwMTIyODA4ODMwOSIsImV4cCI6MTcxOTYxMjUwMSwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6OTk4OCIsImF1ZCI6Ik15U2VjdXJlZEFwcCJ9.3Tp2GNQMOSB4tiA4T06K1vPDyNt-hOHYp20nBxwqfog' // Replace with actual token
       },
       data: data
     };

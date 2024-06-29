@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import { grey } from '@mui/material/colors'
 import Logo from './../../assets/logo.svg'
@@ -9,39 +9,35 @@ import '../../../node_modules/bootstrap/dist/js/bootstrap.bundle'
 import '../../../node_modules/bootstrap-icons/font/bootstrap-icons.css'
 import './Navbar.css'
 
+
 const Navbar = () => {
   
   const MenuItems = [
-    // {
-    //     title: 'Overview',
-    //     url : '/',
-    //     cName: 'navbar-links',
-    //     icon: 'bi bi-grid'
-    // },
+    
     {
-        title: 'Course 1',
+        title: 'Network',
+        url: '/network',
+        cName: 'navbar-links',
+        icon: 'bi bi-mortarboard'
+    },
+    {
+        title: 'Software Engineering',
         url: '/',
-        // cName: 'navbar-links',
-        icon: 'bi bi-mortarboard'
-    },
-    {
-        // title: 'Course 2',
-        url: '/course2',
         cName: 'navbar-links',
         icon: 'bi bi-mortarboard'
     },
     {
-        title: 'Course 3',
-        url: '/course3',
+        title: 'System Design',
+        url: '/system-design',
         cName: 'navbar-links',
         icon: 'bi bi-mortarboard'
     },
-    {
-        title: 'Course 4',
-        url: '/course4',
-        cName: 'navbar-links',
-        icon: 'bi bi-mortarboard'
-    },
+    // {
+    //     title: 'Course 4',
+    //     url: '/course4',
+    //     cName: 'navbar-links',
+    //     icon: 'bi bi-mortarboard'
+    // },
     {
         title: 'My Profile',
         url: '/myprofile',
@@ -112,9 +108,7 @@ const Navbar = () => {
           </div>
 
           <div className='col login-btn-container-course'>
-            <Link to='/login' className='login-btn-nav-course '>
-              Login
-            </Link>
+              <Link to='/login' className='login-btn-nav-course '>Login</Link>
           </div>
         </div>
       </nav>
