@@ -56,8 +56,8 @@ const Course2 = () => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `http://127.0.0.1:8080/chat/SW2/?session_id=${session_id}`,
-      headers: {}
+      url: `https://6720-156-210-15-233.ngrok-free.app/chat/SW2/?session_id=${session_id}`,
+      headers: { "ngrok-skip-browser-warning": "69423"}
     };
 
     try {
@@ -152,9 +152,10 @@ const Course2 = () => {
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'http://127.0.0.1:8080/chat/SW2/',
+      url: 'https://6720-156-210-15-233.ngrok-free.app/chat/SW2/',
       headers: { 
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        "ngrok-skip-browser-warning": "69424",
       },
       data: data
     };

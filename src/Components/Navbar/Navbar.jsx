@@ -33,8 +33,8 @@ const Navbar = () => {
         icon: 'bi bi-mortarboard'
     },
     // {
-    //     title: 'Course 4',
-    //     url: '/course4',
+    //     title: 'Mathematics',
+    //     url: '/math',
     //     cName: 'navbar-links',
     //     icon: 'bi bi-mortarboard'
     // },
